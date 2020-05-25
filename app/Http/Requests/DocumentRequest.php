@@ -26,7 +26,7 @@ class DocumentRequest extends FormRequest
     {
         $this->merge([
             'name' => filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES),
-            'description' => ($this->description ? filter_var($this->description, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES): NULL)
+            'description' => ($this->description ? filter_var($this->description, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : '')
         ]);
     }
 
@@ -38,7 +38,7 @@ class DocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['string', 'required'],
+            'name' => ['string', 'required', 'max:255'],
             'description' => ['string', 'nullable'],
             'visibility' => [
                 'required',

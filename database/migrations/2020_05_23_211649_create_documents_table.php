@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('file_path');
+            $table->enum('orientation', ['portrait', 'landscape'])->default('portrait');
             $table->enum('visibility', ['public', 'private'])->default('private');
             $table->json('json')->nullable();
             $table->timestamps();
