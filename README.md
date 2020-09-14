@@ -54,9 +54,9 @@ Information you can store agaisnt a document is as follows:
 - visibility - public or private with a time sensitive URL
 - json - any JSON you want to store to do text replacement for dynamically generated documents. *Coming Soon*
 
-The visibility field allows you to specify whether you want the document to be publically visibile on the Internet or private, which can only be accessed via a signed url.
+The visibility field allows you to specify whether you want the document to be publically visible on the Internet or private, which can only be accessed via a signed url.
 
-If you want to make a document private, you can also specifiy a duration field which makes the signed URL exipre after a time period you specifiy in minutes.
+If you want to make a document private, you can also specifiy a `duration: 10` field which makes the signed URL exipre after a time period you specifiy in minutes.
 
 ### Streaming the PDF
 
@@ -86,3 +86,7 @@ Deleting a document will permanently delete the file from the cloud storage and 
 ## Authentication
 
 Out of the box this API comes with no Authentication enabled. You are free to use Laravel Passport, Sanctum or a method of your chosing to help restrict access to your API endpoints.
+
+## Extending
+
+This project serves as a boilerplate to get you quickly started with PDF generation. You are free to extend it to meet your needs. 
