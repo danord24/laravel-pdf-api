@@ -105,7 +105,8 @@ class DocumentController extends Controller
     {
         $document->update($request->only([
             'name',
-            'description'
+            'description',
+            'visibility'
         ]));
 
         $document = $this->determineFileUrl($request, $document);
