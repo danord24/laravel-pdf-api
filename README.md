@@ -9,7 +9,7 @@ Laravel PDF API does as the name says! It is a quick and simple API which allows
 
 ## Usage
 
-You can import the Postman collection which will give you example endpoints for Creating, Reading, Updating and Deleting Documents (PDF's).
+You can import the [Postman collection] (https://github.com/danord24/laravel-pdf-api/blob/master/postman_collection.json) which will give you example endpoints for Creating, Reading, Updating and Deleting Documents (PDF's).
 
 ### Creating Documents (PDF's)
 As well as generating PDF's from URLs and HTML, this project will also allow you to store details about the document in a database. 
