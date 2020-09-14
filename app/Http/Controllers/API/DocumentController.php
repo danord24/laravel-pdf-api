@@ -9,10 +9,14 @@ use Spatie\Browsershot\Browsershot;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\DocumentResource;
 use App\Http\Requests\DocumentUpdateRequest;
+use App\Http\Traits\DocumentTrait;
 
 class DocumentController extends Controller
 {
+    use DocumentTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -42,51 +46,52 @@ class DocumentController extends Controller
             ->format('a4')
             ->showBackground()
             ->emulateMedia('print')
-            ->margins(10, 0, 0, 10)
+            // ->margins(10, 0, 0, 10)
             ->pdf();
-        
-        $filePath = '/'.env('APP_ENV').'/documents/'.Str::random(32).'.pdf';
+
+        $filePath = '/' . env('APP_ENV') . '/documents/' . Str::random(32) . '.pdf';
 
         $storagePath = Storage::disk('s3')->put($filePath, $pdfFile, $request->visibility);
-        // $storagePath = Storage::put($filePath, $pdf);
 
-        if(! $storagePath) {
+        if (!$storagePath) {
             return response()->json([
                 'message' => 'Problem uploading document.'
             ], 400);
         }
-            
+
         $request->merge([
             'file_path' => $filePath,
         ]);
-    
+
         $document = Document::create($request->only([
             'name',
             'description',
+            'file_path',
             'orientation',
             'visibility',
             'json'
         ]));
 
-        if($request->has('stream_file') && $request->stream_file) {
+        if ($request->has('stream_file') && $request->stream_file) {
             return response($pdfFile)->header('Content-Type', 'application/pdf');
         }
 
-        $document = determineFileUrl($request, $document);
-        
-        return new DocumentResource($document); 
+        $document = $this->determineFileUrl($request, $document);
+
+        return new DocumentResource($document);
     }
 
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Document  $document
      * @return \Illuminate\Http\Response
      */
-    public function show(Document $document)
+    public function show(Request $request, Document $document)
     {
-        $document = fileUrl($request, $document);
-        return new DocumentResource($document); 
+        $document = $this->determineFileUrl($request, $document);
+        return new DocumentResource($document);
     }
 
     /**
@@ -103,7 +108,9 @@ class DocumentController extends Controller
             'description'
         ]));
 
-        return new DocumentResource($document); 
+        $document = $this->determineFileUrl($request, $document);
+
+        return new DocumentResource($document);
     }
 
     /**
@@ -118,29 +125,5 @@ class DocumentController extends Controller
         $document->delete();
 
         return response()->json(null, 204);
-    }
-
-    /**
-     * Determine how to return the URL of a document based on it's visibility
-     *
-     * @param  $request
-     * @param  \App\Document  $document
-     * @return Object
-     */
-    protected function determineFileUrl(Object $request, \App\Document $document) : Object
-    {
-        if($document->visibility == 'public') {
-            $document['public_url'] = Storage::disk('s3')->url($document->file_path);
-        }
-
-        if($document->visibility == 'private') {
-            $document['temporary_url'] = Storage::disk('s3')->temporaryUrl(
-                ltrim($document->file_path, '/'), now()->addMinutes(
-                    $request->expiry ?: 5
-                )
-            );
-        }
-
-        return $document;    
     }
 }

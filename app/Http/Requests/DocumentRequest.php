@@ -53,7 +53,11 @@ class DocumentRequest extends FormRequest
                 },
                 'string'
             ],
-            'url' => ['required_without:html', 'url']
+            'url' => ['required_without:html', 'url'],
+            'orientation' => [
+                'required',
+                Rule::in(['portrait', 'landscape'])
+            ]
         ];
     }
 }
