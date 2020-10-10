@@ -56,7 +56,7 @@ Information you can store agaisnt a document is as follows:
 
 The visibility field allows you to specify whether you want the document to be publically visible on the Internet or private, which can only be accessed via a signed url.
 
-If you want to make a document private, you can also specifiy a `duration: 10` field which makes the signed URL exipre after a time period you specifiy in minutes.
+If you want to make a document private, you can also specifiy a `duration: 10` field which makes the signed URL exipre after a time period you specifiy in minutes. By default, private documents links expire after 5 minutes.
 
 ### Streaming the PDF
 
